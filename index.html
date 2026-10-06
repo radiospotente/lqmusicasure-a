@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+<meta name="theme-color" content="#0A0F1E" />
+<meta name="description" content="LQ Música Sureña — escucha cumbia sureña: agrupaciones, álbumes y mezclas aleatorias con el sello de LQ Producciones." />
+<title>LQ Música Sureña</title>
+
+<!-- ===== PWA: manifest + íconos (paso previo a empaquetar con TWA para Play Store) ===== -->
+<link rel="manifest" href="manifest.json" />
+<link rel="icon" href="assets/icons/favicon-32.png" sizes="32x32" />
+<link rel="icon" href="assets/icons/icon-192.png" sizes="192x192" />
+<link rel="apple-touch-icon" href="assets/icons/apple-touch-icon.png" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+<meta name="apple-mobile-web-app-title" content="LQ Música Sureña" />
+<meta name="mobile-web-app-capable" content="yes" />
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+
+<div id="app">
+
+  <!-- ===== HEADER ===== -->
+  <header class="topbar">
+    <div class="brand">
+      <img src="assets/logo.png" alt="LQ Música Sureña" class="brand-logo" />
+      <span class="brand-name">LQ Música Sureña</span>
+    </div>
+    <div class="header-actions">
+      <button class="icon-btn" id="refreshBtn" aria-label="Actualizar catálogo">
+        <svg viewBox="0 0 24 24" width="20" height="20"><path fill="currentColor" d="M17.65 6.35A7.95 7.95 0 0012 4a8 8 0 108 8h-2a6 6 0 11-1.76-4.24L13 11h7V4z"/></svg>
+      </button>
+      <button class="icon-btn" id="searchToggle" aria-label="Ir a buscar">
+        <svg viewBox="0 0 24 24" width="22" height="22"><path fill="currentColor" d="M10 2a8 8 0 105.29 14.02l4.85 4.84 1.41-1.41-4.84-4.85A8 8 0 0010 2zm0 2a6 6 0 110 12 6 6 0 010-12z"/></svg>
+      </button>
+    </div>
+  </header>
+
+  <!-- ===== MAIN CONTENT ===== -->
+  <main id="main">
+
+    <!-- VISTA: INICIO -->
+    <section class="view" id="view-home" data-view="home">
+      <h1 class="view-title" id="greeting">Buenas tardes</h1>
+
+      <div class="quick-grid" id="quickGrid"></div>
+
+      <section id="homeFavoritesSection" hidden>
+        <h2 class="section-title">Tus favoritos</h2>
+        <div class="hscroll" id="favoritesRow"></div>
+      </section>
+
+      <h2 class="section-title">Recién agregado</h2>
+      <div class="hscroll" id="recentRow"></div>
+
+      <h2 class="section-title">Agrupaciones top</h2>
+      <div class="hscroll hscroll-circles" id="artistsRow"></div>
+
+      <h2 class="section-title">Álbumes destacados</h2>
+      <div class="hscroll" id="albumsRow"></div>
+    </section>
+
+    <!-- VISTA: ARTISTAS -->
+    <section class="view" id="view-explore" data-view="explore" hidden>
+      <h1 class="view-title">Artistas</h1>
+
+      <div class="tabs" id="exploreTabs">
+        <button class="tab-btn active" data-filter="agrupacion">Agrupaciones</button>
+        <button class="tab-btn" data-filter="album">Álbumes</button>
+        <button class="tab-btn" data-filter="playlist">Listas</button>
+      </div>
+
+      <div class="grid" id="exploreGrid"></div>
+    </section>
+
+    <!-- VISTA: DETALLE DE LISTA/ÁLBUM -->
+    <section class="view" id="view-detail" data-view="detail" hidden>
+      <button class="back-btn" id="detailBack">
+        <svg viewBox="0 0 24 24" width="20" height="20"><path fill="currentColor" d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/></svg>
+        Volver
+      </button>
+      <div class="detail-header">
+        <img id="detailCover" class="detail-cover" src="" alt="" />
+        <div class="detail-info">
+          <span class="detail-kicker" id="detailKicker">Álbum</span>
+          <h1 id="detailTitle"></h1>
+          <p id="detailSubtitle" class="detail-subtitle"></p>
+        </div>
+      </div>
+      <button class="play-all-btn" id="playAllBtn">
+        <svg viewBox="0 0 24 24" width="20" height="20"><path fill="currentColor" d="M8 5v14l11-7z"/></svg>
+        Reproducir todo
+      </button>
+      <ol class="track-list" id="trackList"></ol>
+    </section>
+
+    <!-- VISTA: ALEATORIO -->
+    <section class="view" id="view-aleatorio" data-view="aleatorio" hidden>
+      <div class="aleatorio-wrap">
+        <div class="aleatorio-logo-ring">
+          <img src="assets/logo.png" alt="LQ" class="aleatorio-logo" />
+        </div>
+        <h1 class="view-title">Mezcla Aleatoria</h1>
+        <p class="aleatorio-sub">Todo tu catálogo mezclado, con el sello de LQ Producciones de por medio.</p>
+        <button class="play-all-btn" id="aleatorioBtn">
+          <svg viewBox="0 0 24 24" width="20" height="20"><path fill="currentColor" d="M8 5v14l11-7z"/></svg>
+          Reproducir mezcla
+        </button>
+      </div>
+    </section>
+
+    <!-- VISTA: BÚSQUEDA -->
+    <section class="view" id="view-search" data-view="search" hidden>
+      <h1 class="view-title">Buscar</h1>
+      <div class="search-field">
+        <svg viewBox="0 0 24 24" width="18" height="18"><path fill="currentColor" d="M10 2a8 8 0 105.29 14.02l4.85 4.84 1.41-1.41-4.84-4.85A8 8 0 0010 2zm0 2a6 6 0 110 12 6 6 0 010-12z"/></svg>
+        <input type="text" id="searchInput" placeholder="Agrupación, álbum o tema" autocomplete="off" />
+      </div>
+      <div class="grid" id="searchResults"></div>
+    </section>
+
+    <!-- VISTA: FAVORITOS -->
+    <section class="view" id="view-favoritos" data-view="favoritos" hidden>
+      <h1 class="view-title">Favoritos</h1>
+      <button class="play-all-btn" id="playAllFavoritesBtn">
+        <svg viewBox="0 0 24 24" width="20" height="20"><path fill="currentColor" d="M8 5v14l11-7z"/></svg>
+        Reproducir todo
+      </button>
+      <div class="grid" id="favoritosGrid"></div>
+    </section>
+
+  </main>
+
+  <!-- ===== MINI PLAYER ===== -->
+  <div class="mini-player" id="miniPlayer" hidden>
+    <div class="mini-progress"><div class="mini-progress-fill" id="miniProgressFill"></div></div>
+    <div class="mini-content">
+      <img id="miniCover" class="mini-cover" src="" alt="" />
+      <div class="mini-text">
+        <span id="miniTitle" class="mini-title"></span>
+        <span id="miniArtist" class="mini-artist"></span>
+      </div>
+      <button class="icon-btn" id="miniPlayPause" aria-label="Reproducir/Pausar">
+        <svg id="miniPlayIcon" viewBox="0 0 24 24" width="26" height="26"><path fill="currentColor" d="M8 5v14l11-7z"/></svg>
+      </button>
+    </div>
+  </div>
+
+  <!-- ===== FULL PLAYER (sheet) ===== -->
+  <div class="full-player" id="fullPlayer">
+    <div class="full-player-inner">
+      <button class="collapse-btn" id="collapsePlayer" aria-label="Cerrar reproductor">
+        <svg viewBox="0 0 24 24" width="22" height="22"><path fill="currentColor" d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6z"/></svg>
+      </button>
+
+      <div class="full-cover-wrap">
+        <img id="fullCover" class="full-cover" src="" alt="" />
+      </div>
+
+      <div class="full-meta">
+        <div class="full-meta-row">
+          <div class="full-meta-text">
+            <h2 id="fullTitle"></h2>
+            <p id="fullArtist" class="full-artist"></p>
+          </div>
+        </div>
+      </div>
+
+      <div class="full-progress">
+        <input type="range" id="seekBar" min="0" max="100" value="0" step="0.1" />
+        <div class="time-row">
+          <span id="timeElapsed">0:00</span>
+          <span id="timeRemaining">-0:00</span>
+        </div>
+      </div>
+
+      <div class="full-controls">
+        <button class="icon-btn ctrl" id="shuffleBtn" aria-label="Reproducción aleatoria">
+          <svg viewBox="0 0 24 24" width="22" height="22"><path fill="currentColor" d="M10.59 9.17L5.41 4 4 5.41l5.17 5.17 1.41-1.41zM14.5 4l2.04 2.04L4 18.59 5.41 20 17.96 7.46 20 9.5V4h-5.5zm.33 9.41l-1.41 1.41 3.13 3.13L14.5 20H20v-5.5l-2.04 2.04-3.13-3.13z"/></svg>
+        </button>
+        <button class="icon-btn ctrl" id="prevBtn" aria-label="Anterior">
+          <svg viewBox="0 0 24 24" width="28" height="28"><path fill="currentColor" d="M6 6h2v12H6zm3.5 6l8.5 6V6z"/></svg>
+        </button>
+        <button class="play-btn-big" id="fullPlayPause" aria-label="Reproducir/Pausar">
+          <svg id="fullPlayIcon" viewBox="0 0 24 24" width="32" height="32"><path fill="currentColor" d="M8 5v14l11-7z"/></svg>
+        </button>
+        <button class="icon-btn ctrl" id="nextBtn" aria-label="Siguiente">
+          <svg viewBox="0 0 24 24" width="28" height="28"><path fill="currentColor" d="M16 6h2v12h-2zM6 6v12l8.5-6z"/></svg>
+        </button>
+        <button class="fav-btn fav-btn-full" id="fullFavBtn" data-action="toggle-favorite" aria-label="Favorito">
+          <svg viewBox="0 0 24 24"><path fill="currentColor" d="M12 21s-6.7-4.35-9.5-8.28C.6 10.2 1.1 6.9 3.6 5.3c2.1-1.35 4.7-.85 6.1 1 .7.9 1.3 1.9 2.3 3.1 1-1.2 1.6-2.2 2.3-3.1 1.4-1.85 4-2.35 6.1-1 2.5 1.6 3 4.9 1.1 7.42C18.7 16.65 12 21 12 21z"/></svg>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== BOTTOM NAV ===== -->
+  <nav class="bottom-nav" id="bottomNav">
+    <button class="nav-btn active" data-view="home">
+      <svg viewBox="0 0 24 24" width="22" height="22"><path fill="currentColor" d="M12 3l9 8h-3v9h-5v-6H11v6H6v-9H3z"/></svg>
+      <span>Inicio</span>
+    </button>
+    <button class="nav-btn" data-view="explore">
+      <svg viewBox="0 0 24 24" width="22" height="22"><path fill="currentColor" d="M12 2a10 10 0 100 20 10 10 0 000-20zm3.5 6.5l-2 5.5-5.5 2 2-5.5z"/></svg>
+      <span>Artistas</span>
+    </button>
+    <button class="nav-btn" data-view="aleatorio">
+      <svg viewBox="0 0 24 24" width="22" height="22"><path fill="currentColor" d="M10.59 9.17L5.41 4 4 5.41l5.17 5.17 1.41-1.41zM14.5 4l2.04 2.04L4 18.59 5.41 20 17.96 7.46 20 9.5V4h-5.5zm.33 9.41l-1.41 1.41 3.13 3.13L14.5 20H20v-5.5l-2.04 2.04-3.13-3.13z"/></svg>
+      <span>Aleatorio</span>
+    </button>
+    <button class="nav-btn" data-view="favoritos">
+      <svg viewBox="0 0 24 24" width="21" height="21"><path fill="currentColor" d="M12 21s-6.7-4.35-9.5-8.28C.6 10.2 1.1 6.9 3.6 5.3c2.1-1.35 4.7-.85 6.1 1 .7.9 1.3 1.9 2.3 3.1 1-1.2 1.6-2.2 2.3-3.1 1.4-1.85 4-2.35 6.1-1 2.5 1.6 3 4.9 1.1 7.42C18.7 16.65 12 21 12 21z"/></svg>
+      <span>Favoritos</span>
+    </button>
+    <button class="nav-btn" data-view="search">
+      <svg viewBox="0 0 24 24" width="22" height="22"><path fill="currentColor" d="M10 2a8 8 0 105.29 14.02l4.85 4.84 1.41-1.41-4.84-4.85A8 8 0 0010 2zm0 2a6 6 0 110 12 6 6 0 010-12z"/></svg>
+      <span>Buscar</span>
+    </button>
+  </nav>
+
+  <audio id="audioEl" preload="auto"></audio>
+  <audio id="preloadEl" preload="auto"></audio>
+</div>
+
+<script src="js/config.js"></script>
+<script src="js/app.js"></script>
+<script>
+  // Registro del Service Worker: habilita instalación como PWA y algo de caché
+  // offline para la interfaz (no para el audio, que siempre se transmite en vivo).
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('sw.js').catch((err) => {
+        console.warn('No se pudo registrar el Service Worker:', err);
+      });
+    });
+  }
+</script>
+</body>
+</html>
